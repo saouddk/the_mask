@@ -26,7 +26,7 @@ module TheMask
     end
 
     def open_url(url)
-      read_proc = Proc.new do begin
+      read_proc = Proc.new do
         tries = 0
         page_data = nil
         begin
@@ -58,7 +58,6 @@ module TheMask
         rescue Net::HTTPInternalServerError => e
           retry
         end
-
         page_data
       end
 
@@ -72,9 +71,7 @@ module TheMask
         end
       end
 
-      return read_proc.call.body
-    end
-
+      read_proc.call.body
     end
   end
 end
