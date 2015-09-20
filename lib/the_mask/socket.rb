@@ -13,7 +13,7 @@ module TheMask
 
       @agent.open_timeout = options[:open_timeout] || DEFAULT_OPEN_TIMEOUT
       @agent.read_timeout = options[:read_timeout] || DEFAULT_READ_TIMEOUT
-      @agent.user_agent = self.get_random_user_agent_str
+      @agent.user_agent = TheMask.get_random_user_agent_str
 
       if options[:proxy]
         @agent.set_proxy options[:proxy][:ip], options[:proxy][:port], options[:proxy][:username] || '', options[:proxy][:password] || ''
