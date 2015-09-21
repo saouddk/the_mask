@@ -29,13 +29,13 @@ Or install it yourself as:
 This will return the body data from the supplied URL.  
   
 Available options:  
-`read_timeout` = Read timeout in seconds (default: 3)  
-`open_timeout` = Open timeout in seconds (default: 3)  
-`timeout` = Timeout for whole procedure in seconds (default: 5)  
-`max_tries` = Maximum attempts in reading the page (default: 3)  
-`min_page_length` = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)  
-`reset_ua` = Reset user agent on every request. (default: true)
-`force` = Force continuous opening of page until data is retrieved (default: false)  
+`read_timeout = Read timeout in seconds (default: 3)`  
+`open_timeout = Open timeout in seconds (default: 3)`  
+`timeout = Timeout for whole procedure in seconds (default: 5)`  
+`max_tries = Maximum attempts in reading the page (default: 3)`  
+`min_page_length = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)`   
+`reset_ua = Reset user agent on every request. (default: true)`  
+`force = Force continuous opening of page until data is retrieved (default: false)`  
 
 Proxy options example:  
 `mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })`  
