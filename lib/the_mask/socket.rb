@@ -81,6 +81,8 @@ module TheMask
           retry
         rescue Net::HTTPInternalServerError => e
           retry
+        rescue
+          retry
         end
         page_data
       end

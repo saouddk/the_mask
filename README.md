@@ -34,6 +34,7 @@ Available options:
 `timeout` = Timeout for whole procedure in seconds (default: 5)  
 `max_tries` = Maximum attempts in reading the page (default: 3)  
 `min_page_length` = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)  
+`reset_ua` = Reset user agent on every request. (default: true)
 `force` = Force continuous opening of page until data is retrieved (default: false)  
 
 Proxy options example:  
