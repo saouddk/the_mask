@@ -22,9 +22,9 @@ Or install it yourself as:
 
 ## Usage
 
-```mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
+`  mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
    mask_connect.open_url 'http://www.abcdefg.com'
-```
+`
 
 This will return the body data from the supplied URL.
 
