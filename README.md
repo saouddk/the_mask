@@ -22,25 +22,25 @@ Or install it yourself as:
 
 ## Usage
 
-`  mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
-   mask_connect.open_url 'http://www.abcdefg.com'
+`mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
+ mask_connect.open_url 'http://www.abcdefg.com'
 `
+  
+This will return the body data from the supplied URL.  
+  
+Available options:  
+`read_timeout` = Read timeout in seconds (default: 3)  
+`open_timeout` = Open timeout in seconds (default: 3)  
+`timeout` = Timeout for whole procedure in seconds (default: 5)  
+`max_tries` = Maximum attempts in reading the page (default: 3)  
+`min_page_length` = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)  
+`force` = Force continuous opening of page until data is retrieved (default: false)  
 
-This will return the body data from the supplied URL.
-
-Available options:
-`read_timeout` = Read timeout in seconds (default: 3)
-`open_timeout` = Open timeout in seconds (default: 3)
-`timeout` = Timeout for whole procedure in seconds (default: 5)
-`max_tries` = Maximum attempts in reading the page (default: 3)
-`min_page_length` = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)
-`force` = Force continuous opening of page until data is retrieved (default: false)
-
-Proxy options example:
-`mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })`
-
-Or supply multiple proxies with an array:
-`mask_connect = TheMask::Connect.new(proxies: ['111.11.1.1:80', '10.10.101.10:800', '192.10.10.1:80:sdad:asdasd'])`
+Proxy options example:  
+`mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })`  
+  
+Or supply multiple proxies with an array:  
+`mask_connect = TheMask::Connect.new(proxies: ['111.11.1.1:80', '10.10.101.10:800', '192.10.10.1:80:sdad:asdasd'])`  
 
 
 ## Development
