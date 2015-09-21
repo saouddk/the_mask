@@ -1,8 +1,8 @@
 # TheMask
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/the_mask`. To experiment with that code, run `bin/console` for an interactive prompt.
+![alt tag](http://i.imgur.com/gecDZon.jpg)
 
-TODO: Delete this and the text above, and describe your gem
+Tired of issues involved with data mining? Put on The Mask and try data mining designed for the next generation.
 
 ## Installation
 
@@ -22,7 +22,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
+   mask_connect.open_url 'http://www.abcdefg.com'
+```
+
+This will return the body data from the supplied URL.
+
+Available options:
+`read_timeout` = Read timeout in seconds (default: 3)
+`open_timeout` = Open timeout in seconds (default: 3)
+`timeout` = Timeout for whole procedure in seconds (default: 5)
+`max_tries` = Maximum attempts in reading the page (default: 3)
+`min_page_length` = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)
+`force` = Force continuous opening of page until data is retrieved (default: false)
+
+Proxy options example:
+`mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })`
+
+Or supply multiple proxies with an array:
+`mask_connect = TheMask::Connect.new(proxies: ['111.11.1.1:80', '10.10.101.10:800', '192.10.10.1:80:sdad:asdasd'])`
+
 
 ## Development
 

@@ -7,22 +7,34 @@ module TheMask
     MAXIMUM_TRIES = 3
     MINIMUM_PAGE_LENGTH = 100 #bytes
     FORCE_READ = false
+    RESET_USER_AGENT = true
 
     def initialize(options = {})
-      @agent = Mechanize.new
-
-      @agent.open_timeout = options[:open_timeout] || DEFAULT_OPEN_TIMEOUT
-      @agent.read_timeout = options[:read_timeout] || DEFAULT_READ_TIMEOUT
-      @agent.user_agent = TheMask.get_random_user_agent_str
-
-      if options[:proxy]
-        @agent.set_proxy options[:proxy][:ip], options[:proxy][:port], options[:proxy][:username] || '', options[:proxy][:password] || ''
-      end
-
+      @proxies = nil
       @timeout = options[:timeout] || GENERAL_TIMEOUT
       @max_tries = options[:max_tries] || MAXIMUM_TRIES
       @force = options[:force] || FORCE_READ
       @min_page_length = options[:min_page_length] || MINIMUM_PAGE_LENGTH
+      @reset_user_agent = options[:reset_ua] || RESET_USER_AGENT
+
+      @agent = Mechanize.new
+
+      @agent.open_timeout = options[:open_timeout] || DEFAULT_OPEN_TIMEOUT
+      @agent.read_timeout = options[:read_timeout] || DEFAULT_READ_TIMEOUT
+
+      unless options[:proxies]
+        if options[:proxy]
+          if options[:proxy][:username] &&  options[:proxy][:password]
+            @agent.set_proxy options[:proxy][:ip], options[:proxy][:port], options[:proxy][:username], options[:proxy][:password]
+          else
+            @agent.set_proxy options[:proxy][:ip], options[:proxy][:port]
+          end
+        end
+      else
+        @proxies = TheMask::ProxyList.new(options[:proxies])
+      end
+
+      @agent.user_agent = TheMask.get_random_user_agent_str unless @reset_user_agent
     end
 
     def open_url(url)
@@ -33,7 +45,19 @@ module TheMask
           tries += 1
 
           if !@force && tries > @max_tries
-            raise "Maximum tries attempt for URL = #{url}"
+            raise "TheMask: maximum tries reached for URL = #{url} after #{tries} tries. Check the availability of the host or your proxy settings."
+          end
+
+          @agent.user_agent = TheMask.get_random_user_agent_str if @reset_user_agent
+
+          unless @proxies.nil?
+            proxy = @proxies.get_proxy
+
+            if proxy.username && proxy.password
+              @agent.set_proxy proxy.ip, proxy.port, proxy.username, proxy.password
+            else
+              @agent.set_proxy proxy.ip, proxy.port
+            end
           end
 
           Timeout::timeout(@timeout) do
