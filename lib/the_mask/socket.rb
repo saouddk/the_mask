@@ -39,8 +39,9 @@ module TheMask
 
     def open_url(url)
       read_proc = Proc.new do
-        tries = 0
-        page_data = nil
+        tries = 0 #Total URL retrieval tries
+        page_data = nil #Retrieved page html data
+
         begin
           tries += 1
 
@@ -50,14 +51,24 @@ module TheMask
 
           @agent.user_agent = TheMask.get_random_user_agent_str if @reset_user_agent
 
-          unless @proxies.nil?
-            proxy = @proxies.get_proxy
+          proxy = nil
 
-            if proxy.username && proxy.password
-              @agent.set_proxy proxy.ip, proxy.port, proxy.username, proxy.password
-            else
-              @agent.set_proxy proxy.ip, proxy.port
+          begin
+            unless @proxies.nil?
+              begin
+                proxy = @proxies.get_proxy
+
+                if proxy.username && proxy.password
+                  @agent.set_proxy proxy.ip, proxy.port, proxy.username, proxy.password
+                else
+                  @agent.set_proxy proxy.ip, proxy.port
+                end
+              end
             end
+          rescue Timeout::ExitException => e
+            #Exception timeout from mechanize
+            @proxies.remove_proxy!(proxy)
+            retry
           end
 
           Timeout::timeout(@timeout) do
