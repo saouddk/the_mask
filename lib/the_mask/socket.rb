@@ -8,6 +8,7 @@ module TheMask
     MINIMUM_PAGE_LENGTH = 100 #bytes
     FORCE_READ = false
     RESET_USER_AGENT = true
+    MIN_PROXY_RESPONSE_TIME = nil #seconds, default: nil = do not remove proxies
 
     def initialize(options = {})
       @proxies = nil
@@ -16,6 +17,7 @@ module TheMask
       @force = options[:force] || FORCE_READ
       @min_page_length = options[:min_page_length] || MINIMUM_PAGE_LENGTH
       @reset_user_agent = options[:reset_ua] || RESET_USER_AGENT
+      @min_proxy_response_time = options[:min_proxy_response_time] || MIN_PROXY_RESPONSE_TIME
 
       @agent = Mechanize.new
 
@@ -39,8 +41,13 @@ module TheMask
 
     def open_url(url)
       read_proc = Proc.new do
+        proxy = nil #Selected proxy
         tries = 0 #Total URL retrieval tries
         page_data = nil #Retrieved page html data
+
+        #Variables for timing the GET request
+        end_time = nil
+        start_time = nil
 
         begin
           tries += 1
@@ -50,8 +57,6 @@ module TheMask
           end
 
           @agent.user_agent = TheMask.get_random_user_agent_str if @reset_user_agent
-
-          proxy = nil
 
           begin
             unless @proxies.nil?
@@ -72,7 +77,9 @@ module TheMask
           end
 
           Timeout::timeout(@timeout) do
+            start_time = Time.now
             page_data = @agent.get url
+            end_time = Time.now
           end
         rescue Errno::ETIMEDOUT => e
           retry
@@ -95,6 +102,13 @@ module TheMask
         rescue
           retry
         end
+
+        unless @min_proxy_response_time.nil? || start_time.nil? || end_time.nil?
+          #Remove proxy from list if response time is longer than the minimum response time provided in options
+          response_time = end_time - start_time
+          @proxies.remove_proxy!(proxy) if response_time > @min_proxy_response_time
+        end
+
         page_data
       end
 

@@ -4,6 +4,13 @@
 
 Tired of issues involved with data mining? Put on The Mask and try data mining designed for the next generation.
 
+## Features
+
+- A powerful internal proxy list manager that prioritizes successful mining and retrieval of data.  
+- Full control over the data mining process through various configurations available (see below for options).
+- Socket obfuscation (in-progress)
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -12,36 +19,40 @@ Add this line to your application's Gemfile:
 gem 'the_mask'
 ```
 
-And then execute:
-
-    $ bundle
-
 Or install it yourself as:
 
     $ gem install the_mask
 
 ## Usage
 
-`mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
- mask_connect.open_url 'http://www.abcdefg.com'
-`
+```ruby
+mask_connect = TheMask::Connect.new(read_timeout: 4, open_timeout: 4, max_tries: 4)
+mask_connect.open_url('http://www.abcdefg.com')
+```
   
 This will return the body data from the supplied URL.  
   
 Available options:  
-`read_timeout = Read timeout in seconds (default: 3)`  
-`open_timeout = Open timeout in seconds (default: 3)`  
-`timeout = Timeout for whole procedure in seconds (default: 5)`  
-`max_tries = Maximum attempts in reading the page (default: 3)`  
-`min_page_length = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)`   
-`reset_ua = Reset user agent on every request. (default: true)`  
-`force = Force continuous opening of page until data is retrieved (default: false)`  
+```
+read_timeout = Read timeout in seconds (default: 3)
+open_timeout = Open timeout in seconds (default: 3)
+timeout = Timeout for whole procedure in seconds (default: 5)
+max_tries = Maximum attempts in reading the page (default: 3)
+min_page_length = Minimum page length in bytes, if not satisfied, reattempt retrieval (default: 100 bytes)
+reset_ua = Reset user agent on every request. (default: true)
+force = Force continuous opening of page until data is retrieved (default: false)
+min_proxy_response_time = Minimum response time for proxies in seconds. After executing open_url, if proxy response time is over set minimum, proxy will be removed from internal proxy list (default: no minimum response time)
+```
 
 Proxy options example:  
-`mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })`  
+```ruby
+mask_connect = TheMask::Connect.new(proxy: { ip: '127.0.0.1', port: 8080, username: 'asd333', password: 'asd333' })
+```
   
 Or supply multiple proxies with an array:  
-`mask_connect = TheMask::Connect.new(proxies: ['111.11.1.1:80', '10.10.101.10:800', '192.10.10.1:80:sdad:asdasd'])`  
+```ruby
+mask_connect = TheMask::Connect.new(proxies: ['111.11.1.1:80', '10.10.101.10:800', '192.10.10.1:80:sdad:asdasd'])
+```  
 
 
 ## Development
