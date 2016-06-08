@@ -1,4 +1,8 @@
+require_relative 'mechanize_socks_support'
+
 module TheMask
+  include MechanizeSOCKSSupport
+
   class Socket
     #TODO: Move from Mechanize to native Sockets ;)
     DEFAULT_OPEN_TIMEOUT = 3 #seconds
@@ -63,15 +67,21 @@ module TheMask
               begin
                 proxy = @proxies.get_proxy
 
-                if proxy.username && proxy.password
-                  @agent.set_proxy proxy.ip, proxy.port, proxy.username, proxy.password
+                if proxy.is_SOCKS?
+                  @agent.agent.set_socks proxy.ip, proxy.port
+                elsif proxy.is_HTTP?
+                  if proxy.username && proxy.password
+                    @agent.set_proxy proxy.ip, proxy.port, proxy.username, proxy.password
+                  else
+                    @agent.set_proxy proxy.ip, proxy.port
+                  end
                 else
-                  @agent.set_proxy proxy.ip, proxy.port
+                  raise "TheMask: unknown proxy type '#{proxy.type}'."
                 end
               end
             end
           rescue Timeout::ExitException => e
-            #Exception timeout from mechanize
+            # Exception timeout from mechanize
             @proxies.remove_proxy!(proxy)
             retry
           end
