@@ -1,6 +1,5 @@
 module TheMask
   class ProxyList
-    # TheMask::ProxyList::Proxy class
     class Proxy
       attr_accessor :ip, :port, :username, :password, :type, :socks_version
       HTTP_PROXY = :http
@@ -14,7 +13,7 @@ module TheMask
           last_element = split_str[-1].to_s.downcase
 
           # Check if proxy has SOCKS parameter enabled, by default a proxy will always be a HTTP/s proxy
-          if last_element.start_with?(SOCKS_PROXY.to_s)
+          if last_element.eql?(SOCKS_PROXY.to_s) && (split_str.length == 3 || split_str.length == 5)
             @type = SOCKS_PROXY
             socks_version = last_element[-1]
             if SUPPORTED_SOCKS_VERSIONS.include?(socks_version)
@@ -26,7 +25,6 @@ module TheMask
           else
             @type = HTTP_PROXY
           end
-
           @ip = split_str[0].to_s
           @port = split_str[1].to_i
           @username = split_str[2].to_s unless split_str[2].nil?
@@ -47,7 +45,6 @@ module TheMask
         @type == HTTP_PROXY
       end
     end
-    #ProxyList class
     attr_accessor :proxy_list
 
     def initialize(arr = [])

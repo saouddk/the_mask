@@ -2,25 +2,30 @@ require 'socksify'
 require 'socksify/http'
 
 module MechanizeSOCKSSupport
+  def set_proxy addr, port, user = nil, pass = nil
+    @socks = false
+    super
+  end
+
+  def fetch(uri, method = :get, headers = {}, params = [], referer = current_page, redirects = 0)
+    if @socks && !@socks_http.nil?
+      html = @socks_http.get URI(uri)
+      page = Struct.new(:uri, :body)
+      page.new(uri, html)
+    else
+      super
+    end
+  end
+
   class Mechanize::HTTP::Agent
+    prepend MechanizeSOCKSSupport
+    attr_accessor :http, :old_http, :socks
+
     public
       def set_socks(addr, port)
         set_http unless @http
-        @old_http = @http
-        class << @http
-          attr_accessor :socks_addr, :socks_port
-
-          def http_class
-            Net::HTTP.SOCKSProxy(socks_addr, socks_port)
-          end
-        end
-        @http.socks_addr = addr
-        @http.socks_port = port
-      end
-
-      def set_proxy addr, port, user = nil, pass = nil
-        @http = @old_http unless @old_http.nil?
-        super
+        @socks_http = Net::HTTP::SOCKSProxy(addr, port)
+        @socks = true
       end
 
     private
