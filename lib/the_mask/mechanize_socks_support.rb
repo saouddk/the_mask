@@ -2,7 +2,7 @@ require 'socksify'
 require 'socksify/http'
 
 module MechanizeSOCKSSupport
-  def set_proxy addr, port, user = nil, pass = nil
+  def set_proxy(addr, port, user = nil, pass = nil)
     @socks = false
     super
   end
