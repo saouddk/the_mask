@@ -19,7 +19,7 @@ module MechanizeSOCKSSupport
 
   class Mechanize::HTTP::Agent
     prepend MechanizeSOCKSSupport
-    attr_accessor :http, :old_http, :socks
+    attr_accessor :http, :socks
 
     public
       def set_socks(addr, port)
